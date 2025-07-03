@@ -17,6 +17,7 @@ const CommonForm = ({
   setFormData,
   onSubmit,
   buttonText,
+  isBtnDisabled
 }) => {
   function renderInputByComponentType(getItems) {
     let element = null;
@@ -39,7 +40,7 @@ const CommonForm = ({
           />
         );
         break;
-        
+
       case "select":
         element = (
           <Select
@@ -116,7 +117,7 @@ const CommonForm = ({
         ))}
       </div>
 
-      <Button type="submit" className="mt-5 w-full">
+      <Button disabled={isBtnDisabled} type="submit" className="mt-5 w-full">
         {buttonText || "Submit"}
       </Button>
     </form>

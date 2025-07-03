@@ -32,21 +32,25 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
   return response.data;
 });
 
-export const checkAuth = createAsyncThunk(
-  "/auth/checkauth",
-  async () => {
-    const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers:{
-            "Cache-Control":"no-store, no-cache must-revalidate,proxy-revalidate",
-        }
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+  const response = await axios.post("http://localhost:5000/api/auth/logout", {},{
+    withCredentials: true,
+  });
+  return response.data;
+});
+
+export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
+  const response = await axios.get(
+    "http://localhost:5000/api/auth/check-auth",
+    {
+      withCredentials: true,
+      headers: {
+        "Cache-Control": "no-store, no-cache must-revalidate,proxy-revalidate",
       },
-    );
-    return response.data;
-  }
-);
+    }
+  );
+  return response.data;
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -74,13 +78,20 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(loginUser.fulfilled, (state,action) => {  
-        console.log("action",action);
+      .addCase(loginUser.fulfilled, (state, action) => {
+        console.log("action", action);
         state.isLoading = false;
         state.user = action.payload.success ? action.payload?.user : null;
-        state.isAuthenticated = action.payload.success ;
+        state.isAuthenticated = action.payload.success;
       })
       .addCase(loginUser.rejected, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+
+      //logout slice
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
@@ -90,16 +101,16 @@ const authSlice = createSlice({
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(checkAuth.fulfilled, (state,action) => {  
+      .addCase(checkAuth.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.success ? action.payload?.user : null;
-        state.isAuthenticated = action.payload.success ;
+        state.isAuthenticated = action.payload.success;
       })
       .addCase(checkAuth.rejected, (state) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
-      })
+      });
   },
 });
 

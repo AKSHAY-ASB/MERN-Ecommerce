@@ -54,7 +54,7 @@ export const editProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
   async (id) => {
-    const result = await axios.post(
+    const result = await axios.delete(
       `http://localhost:5000/api/admin/products/delete/${id}`
     );
 
@@ -70,7 +70,6 @@ const AdminProductsSlice = createSlice({
     builder.addCase(fetchAllProducts.pending, (state)=>{
         state.isLoading=true
     }).addCase(fetchAllProducts.fulfilled, (state,action)=>{
-        console.log(action,"-----------------action");
         state.isLoading=false
         state.productList = action.payload?.data
 

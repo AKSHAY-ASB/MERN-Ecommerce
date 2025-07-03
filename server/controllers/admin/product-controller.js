@@ -7,8 +7,6 @@ const handleImageUpload = async (req, res) => {
     const url = "data:" + req.file.mimetype + ";base64," + b64;
     const result = await imageUploadUtils(url);
 
-    console.log("result--->", result);
-
     res.json({
       success: true,
       result,
@@ -104,11 +102,12 @@ const editProduct = async (req, res) => {
     findProduct.description = description || findProduct.description;
     findProduct.category = category || findProduct.category;
     findProduct.brand = brand || findProduct.brand;
-    findProduct.price = price || findProduct.price;
-    findProduct.salePrice = salePrice || findProduct.salePrice;
+    findProduct.price = price === '' ? 0 : price || findProduct.price;
+    findProduct.salePrice = salePrice === '' ? 0 : salePrice|| findProduct.salePrice;
     findProduct.totalStock = totalStock || findProduct.totalStock;
     findProduct.image = image || findProduct.image;
 
+    
       await findProduct.save();
       res.status(200).json({
         success:true,
@@ -129,7 +128,7 @@ const deleteProduct = async (req, res) => {
   try {
 
     const {id} = req.params
-    const product = await Products.findByIdAndUpdate(id);
+    const product = await Products.findByIdAndDelete(id);
 
       if (!product)
       return res.status(404).json({
