@@ -136,6 +136,23 @@ export const shoppingViewHeaderMenuItems = [
     },
 ];
 
+export const categoryOptions = {
+    'men':"Men",
+    'women':"Women",
+    'kids':'Kids',
+    'accessories':"Accessories",
+    'footwear':"Footwear"
+}
+
+export const brandOptions = {
+    'nike':"Nike",
+    'adidas':"Adidas",
+    'puma':'Puma',
+    'reebok':"Reebok",
+    'hrx':"HRX"
+
+}  
+
 export const filterOptions = {
   brand: [
     { id: "nike", label: "Nike" },
