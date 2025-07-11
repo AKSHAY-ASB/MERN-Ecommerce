@@ -18,6 +18,8 @@ import {
 import ShoppingProductTile from "../../components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "@/components/shopping-view/product-details";
+import { addToCart, fetchCartItems } from "@/redux/store/shop/cart-slice";
+import { toast } from "sonner";
 
 const ShoppingListing = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,13 @@ const ShoppingListing = () => {
   const [sort, setSort] = useState(null);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  //fetch all products
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts
+  );
+
+  const { user } = useSelector((state) => state.auth);
 
   const createSearchParamsHelper = (filterParams) => {
     const queryParams = [];
@@ -39,13 +48,6 @@ const ShoppingListing = () => {
     }
     return queryParams.join("&");
   };
-
-  //fetch all products
-  const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
-  );
-
-  console.log(productDetails, "productDetails");
 
   useEffect(() => {
     if (filter !== null && sort !== null)
@@ -97,8 +99,22 @@ const ShoppingListing = () => {
   };
 
   const handleGetProductDetails = (getCurrentProductId) => {
-    console.log(getCurrentProductId, "getCurrentProductId");
     dispatch(fetchProductDetails(getCurrentProductId));
+  };
+
+  const handleAddToCart = (getCurrentProductId) => {
+    dispatch(
+      addToCart({
+        userId: user.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data?.payload.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast.success("Product added to cart");
+      }
+    });
   };
 
   return (
@@ -143,6 +159,7 @@ const ShoppingListing = () => {
                   handleGetProductDetails={handleGetProductDetails}
                   product={items}
                   key={items?._id}
+                  handleAddToCart={handleAddToCart}
                 />
               ))
             : null}
