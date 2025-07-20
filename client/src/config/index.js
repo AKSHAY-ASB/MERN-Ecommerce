@@ -107,32 +107,32 @@ export const shoppingViewHeaderMenuItems = [
     {
         id:"home",
         label:"Home",
-        path:"shop/home"
+        path:"/shop/home"
     },
     {
         id:"men",
         label:"Men",
-        path:"shop/listing"
+        path:"/shop/listing"
     },
         {
         id:"women",
         label:"Women",
-        path:"shop/listing"
+        path:"/shop/listing"
     },
       {
         id:"kids",
         label:"Kids",
-        path:"shop/listing"
+        path:"/shop/listing"
     },
      {
         id:"footwear",
         label:"Footwear",
-        path:"shop/listing"
+        path:"/shop/listing"
     },
      {
         id:"accessories",
         label:"Accessories",
-        path:"shop/listing"
+        path:"/shop/listing"
     },
 ];
 
@@ -188,4 +188,39 @@ export const sortOptions = [
     label: "Title: Z to A"
   }
 ];
+
+export const addressFormControls = [
+   {
+    label: "Address",
+    name: "address",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your address"
+  },{
+    label: "City",
+    name: "city",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your city"
+  }, {
+    label: "Pincode",
+    name: "pincode",
+    componentType: "input",
+    type: "number",
+    placeholder: "Enter your pincode"
+  }, {
+    label: "Phone Number",
+    name: "phone",
+    componentType: "input",
+    type: "tel",
+    placeholder: "Enter your phone number"
+  }, {
+    label: "Notes",
+    name: "notes",
+    componentType: "textarea",
+    type: "text",
+    placeholder: "Additional notes (optional)"
+  }
+];
+
 

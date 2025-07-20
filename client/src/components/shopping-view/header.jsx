@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { shoppingViewHeaderMenuItems } from "@/config";
+import {  shoppingViewHeaderMenuItems } from "@/config";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +17,35 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/redux/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/redux/store/shop/cart-slice";
+import { Label } from "../ui/label";
 
 function MenuItems() {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (getCurrentMenuItem) => {
+    sessionStorage.removeItem("filters");
+
+    const currentFilter = getCurrentMenuItem.id !=="home" ? 
+    {
+      category : [getCurrentMenuItem.id]
+    } : null
+
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter)); 
+    navigate(getCurrentMenuItem.path);
+  } 
+
   return (
     // sm:pl-0 sm:pt-0 pl-4 pt-4
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
-      {shoppingViewHeaderMenuItems.map((items) => (
-        <Link className="text-sm font-medium" key={items.id} to={items.path}>
-          {items.label}
-        </Link>
+      {shoppingViewHeaderMenuItems.map((menuItems) => (
+        <Label
+          className="text-sm font-medium cursor-pointer"
+          key={menuItems.id}
+          onClick={()=>handleNavigate(menuItems)}
+        >
+          {menuItems.label}
+        </Label>
       ))}
     </nav>
   );
