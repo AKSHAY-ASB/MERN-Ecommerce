@@ -38,11 +38,11 @@ export const fetchAddress = createAsyncThunk(
 
 export const editAddress = createAsyncThunk(
   "addresses/editAddress",
-  async ({ userId, addressId, data }) => {
+  async ({ userId, addressId, formData }) => {
     try {
       const response = await axios.put(
         `http://localhost:5000/api/shop/address/update/${userId}/${addressId}`,
-         data 
+         formData 
       );
       return response.data;
     } catch (error) {
@@ -74,13 +74,11 @@ const addressSlice = createSlice({
     builder.addCase(addNewAddress.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(addNewAddress.fulfilled, (state, action) => {
+    builder.addCase(addNewAddress.fulfilled, (state) => {
       state.isLoading = false;
-      state.addressList = action.payload.data;
     });
     builder.addCase(addNewAddress.rejected, (state) => {
       state.isLoading = false;
-      state.addressList = [];
     });
 
     builder.addCase(fetchAddress.pending, (state) => {
