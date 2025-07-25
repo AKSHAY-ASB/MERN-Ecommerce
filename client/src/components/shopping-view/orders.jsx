@@ -12,8 +12,6 @@ import { Button } from "../ui/button";
 import { Dialog } from "../ui/dialog";
 import ShoppingOrderDetailsView from "./order-details";
 
-// time 10:17
-
 const ShoppingOrders = () => {
   
   const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);  
