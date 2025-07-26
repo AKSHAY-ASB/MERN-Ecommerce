@@ -1,5 +1,6 @@
 const paypal = require("../../helpers/paypal");
 const Order = require("../../models/Order");
+const Cart = require("../../models/Cart");
 
 const createOrder = async (req, res) => {
   try {
@@ -15,6 +16,7 @@ const createOrder = async (req, res) => {
       orderUpdateDate,
       paymentId,
       PayerId,
+      cartId,
     } = req.body;
 
     const create_payment_json = {
@@ -57,6 +59,7 @@ const createOrder = async (req, res) => {
       } else {
         const newlyCreatedOrder = new Order({
           userId,
+          cartId,
           cartItems,
           addressInfo,
           orderStatus,
@@ -71,14 +74,15 @@ const createOrder = async (req, res) => {
 
         await newlyCreatedOrder.save();
 
-        const approvalUrl = paymentInfo.links.find(link=>link.rel === "approval_url").href
+        const approvalUrl = paymentInfo.links.find(
+          (link) => link.rel === "approval_url"
+        ).href;
 
-        res.stats(200).json({
-            success:true,
-            approvalUrl,
-            orderId:newlyCreatedOrder._id,
+        res.status(200).json({
+          success: true,
+          approvalUrl,
+          orderId: newlyCreatedOrder._id,
         });
-
       }
     });
   } catch (error) {
@@ -92,6 +96,32 @@ const createOrder = async (req, res) => {
 
 const capturePayment = async (req, res) => {
   try {
+    const { paymentId, PayerId, orderId } = req.body;
+
+    let order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order can not be found",
+      });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+    order.paymentId = paymentId;
+    order.PayerId = PayerId;
+
+    const getCartId = order.cartId;
+    await Cart.findByIdAndDelete(getCartId);
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order Confirmed",
+      data: order,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -101,4 +131,64 @@ const capturePayment = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, capturePayment };
+const getAllOrderByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const orders = await Order.find({ userId });
+
+    if (!orders.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Orders not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: orders,
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some Error Occured",
+    });
+  }
+};
+
+const getOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Orders not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order,
+    });
+
+    console.log(res,"res");
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Order Not Found",
+    });
+  }
+};
+
+module.exports = {
+  createOrder,
+  capturePayment,
+  getAllOrderByUser,
+  getOrderDetails,
+};

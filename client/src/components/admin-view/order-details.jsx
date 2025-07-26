@@ -3,18 +3,27 @@ import { DialogContent } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
+import { useDispatch, useSelector } from "react-redux";
+import { Badge } from "../ui/badge";
+import { updateOrderStatusAdmin } from "@/redux/store/admin/order-slice";
 
-const AdminOrderDetailsView = () => {
+const AdminOrderDetailsView = ({ orderDetails }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const initialFormData = {
+    status: "",
+  };
+  const [formData, setFormData] = React.useState(initialFormData);
 
-    const initialFormData = {
-     status:""
-    };
-
-    const handleUpdateStatus = (e) => {
-        e.preventDefault();
-    };  
-
-    const [formData, setFormData] = React.useState(initialFormData);
+  const handleUpdateStatus = (e) => {
+    e.preventDefault();
+    const { status } = formData;
+    dispatch(updateOrderStatusAdmin({
+        id: orderDetails?._id,
+        orderStatus: status,
+      })
+    ).then(data => console.log(data, "<><><><>"));
+  };
 
   return (
     <DialogContent className="sm:max-w-[600px]">
@@ -22,49 +31,77 @@ const AdminOrderDetailsView = () => {
         <div className="grid gap-2">
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Id</p>
-            <Label>12345</Label>
+            <Label>{orderDetails?._id}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Date</p>
-            <Label>22/07/2025</Label>
+            <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Price</p>
-            <Label>$42000</Label>
+            <Label>${orderDetails?.totalAmount}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment Method</p>
+            <Label>{orderDetails?.paymentMethod}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment Status</p>
+            <Label>{orderDetails?.paymentStatus}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Status</p>
-            <Label>In Process</Label>
+            <Label>
+              <Badge
+                className={`py-1 px-2 ${
+                  orderDetails?.orderStatus === "confirmed"
+                    ? "bg-green-400"
+                    : "bg-black"
+                }`}
+              >
+                {orderDetails?.orderStatus}
+              </Badge>
+            </Label>
           </div>
-          <Separator />
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <div className="font-medium">Order Details</div>
-              <ul className="grid gap-3">
-                <li className="flex items-center justify-between">
-                  <p>Product Name</p>
-                  <p>$100</p>
-                </li>
-              </ul>
+        </div>
+        <Separator />
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <div className="font-medium">Order Details</div>
+            <ul className="grid gap-3">
+              {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
+                ? orderDetails?.cartItems.map((item) => (
+                    <li
+                      className="flex items-center justify-between"
+                      key={item.title}
+                    >
+                      <p>Title : {item?.title}</p>
+                      <p>Quantity : {item?.quantity}</p>
+                      <p>Price : ${item?.price}</p>
+                    </li>
+                  ))
+                : null}
+            </ul>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <div className="font-medium">Shipping Information</div>
+            <div className="grid gap-0.5 text-muted-foreground">
+              <span>{user?.name}</span>
+              <span>{orderDetails?.addressInfo?.address}</span>
+              <span>{orderDetails?.addressInfo?.city}</span>
+              <span>{orderDetails?.addressInfo?.pincode}</span>
+              <span>{orderDetails?.addressInfo?.phone}</span>
+              <span>{orderDetails?.addressInfo?.notes}</span>
             </div>
           </div>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <div className="font-medium">Shipping Information</div>
-              <div className="grid gap-0.5 text-muted-foreground">
-                <span>Aksha Buchade</span>
-                <span>2495 D Ward shukrawar peth, kesapur galli, kolhapur</span>
-                <span>Maharashtra</span>
-                <span>416002</span>
-                <sapn>8989898989</sapn>
-                <span>notes</span>
-              </div>
-            </div>
-          </div>
+        </div>
 
-          <div>
-            <CommonForm
-              formControls={[{
+        <div>
+          <CommonForm
+            formControls={[
+              {
                 label: "Order Status",
                 name: "status",
                 componentType: "select",
@@ -75,13 +112,13 @@ const AdminOrderDetailsView = () => {
                   { id: "delivered", label: "Delivered" },
                   { id: "rejected", label: "Rejected" },
                 ],
-              }]}
-              formData={formData}
-              setFormData={setFormData}
-              buttonText={'Update Order Status'}
-              onSubmit={() => {handleUpdateStatus }}
-            />
-          </div>
+              },
+            ]}
+            formData={formData}
+            setFormData={setFormData}
+            buttonText={"Update Order Status"}
+            onSubmit={handleUpdateStatus}
+          />
         </div>
       </div>
     </DialogContent>
