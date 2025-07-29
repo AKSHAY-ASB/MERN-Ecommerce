@@ -66,7 +66,6 @@ const fetchAllProducts = async (req, res) => {
       success: true,
       data: listOfProducts,
     });
-    console.log("listOfProducts",listOfProducts)
   } catch (error) {
     console.log(error);
     res.status(500).json({

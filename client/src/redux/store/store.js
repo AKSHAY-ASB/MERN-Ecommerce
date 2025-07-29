@@ -7,6 +7,9 @@ import ShopProductSlice from './shop/product-slice';
 import shopCartSlice from './shop/cart-slice';
 import addressSlice from './shop/address-slice';
 import shopOrderSlice from './shop/order-slice'
+import shopSearchSlice from './shop/search-slice'
+import reviewSlice from './shop/review-slice'
+import commonFeatureSlice from "./common-slice"
 
 const store = configureStore({
     reducer:{
@@ -16,7 +19,10 @@ const store = configureStore({
         shopProducts:ShopProductSlice,
         shopCart:shopCartSlice,
         shopAddress:addressSlice,
-        shopOrder:shopOrderSlice
+        shopOrder:shopOrderSlice,
+        shopSearch:shopSearchSlice,
+        shopReview:reviewSlice,
+        commonFeature:commonFeatureSlice
     }
 });
 

@@ -29,7 +29,6 @@ export const fetchAllProducts = createAsyncThunk(
     const result = await axios.get(
       "http://localhost:5000/api/admin/products/get",
     );
-    console.log("result----->",result)
     return result?.data;
   }
 );

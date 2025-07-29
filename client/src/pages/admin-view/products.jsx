@@ -73,7 +73,6 @@ const AdminProducts = () => {
             image: uploadedImageUrl,
           })
         ).then((data) => {
-          console.log(data);
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
             setOpenCreateProductDialog(false);

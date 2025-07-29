@@ -67,7 +67,6 @@ const updateOrderStatus = async (req, res) => {
     }
 
     const result = await Order.findByIdAndUpdate(id,{orderStatus});
-    console.log("result",result);
 
     res.status(200).json({
         success:true,

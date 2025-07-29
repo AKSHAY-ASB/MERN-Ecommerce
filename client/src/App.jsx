@@ -18,21 +18,23 @@ import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./redux/store/auth-slice";
-import { Skeleton } from "@/components/ui/skeleton"
-import PaypalReturnPage from "./pages/shopping-view/paypal-return"
+import { Skeleton } from "@/components/ui/skeleton";
+import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
+import SearchProducts from "./pages/shopping-view/search";
 
 const App = () => {
-
-  const {user, isAuthenticated, isLoading} = useSelector(state=>state.auth);
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
 
   const dispatch = useDispatch();
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(checkAuth());
-  },[dispatch])
+  }, [dispatch]);
 
-  if(isLoading) return <Skeleton className="h-[600px] w-[600px] bg-amber-300" />
-
+  if (isLoading)
+    return <Skeleton className="h-[600px] w-[600px] bg-amber-300" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
@@ -41,6 +43,15 @@ const App = () => {
       {/* <h1>Header component</h1> */}
 
       <Routes>
+        <Route
+          path="/"
+          element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+            />
+          }
+        />
         <Route
           path="/auth"
           element={
@@ -77,10 +88,11 @@ const App = () => {
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
-          <Route path="paypal-return" element={<PaypalReturnPage/>}/>
-          <Route path="payment-success" element={<PaymentSuccessPage/>}/>
+          <Route path="paypal-return" element={<PaypalReturnPage />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
-        <Route path="/unauth-page" element={<UnauthPage/>}/>
+        <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

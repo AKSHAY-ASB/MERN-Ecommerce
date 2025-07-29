@@ -24,7 +24,6 @@ const AuthRegister = () => {
   const onSubmit = (event) =>{
     event.preventDefault();
     dispatch(registerUser(formData)).then((data)=>{
-      console.log(data)
       if(data?.payload?.success) {
         toast.success(data?.payload?.message)
       }else{

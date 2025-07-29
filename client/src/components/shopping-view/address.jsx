@@ -12,7 +12,7 @@ import {
 import AddressCard from "./address-card";
 import { toast } from "sonner";
 
-const Address = ({setCurrentSelectedAddress}) => {
+const Address = ({setCurrentSelectedAddress,selectedId}) => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
@@ -113,6 +113,7 @@ const Address = ({setCurrentSelectedAddress}) => {
                 handleDeleteAddress={handleDeleteAddress}
                 key={item._id}
                 setCurrentSelectedAddress={setCurrentSelectedAddress}
+                selectedId={selectedId}
               />
             ))
           : null}

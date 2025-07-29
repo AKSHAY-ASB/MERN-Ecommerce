@@ -24,8 +24,6 @@ const ShoppingOrders = () => {
   const { user } = useSelector((state) => state.auth);
   const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
 
-  console.log(orderDetails,"orderDetails")
-
   const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
 
   const handleGetOrderDetails = (getID) => {
@@ -43,7 +41,7 @@ const ShoppingOrders = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Order History</CardTitle>
+        <CardTitle className="text-4xl p-2">Order History</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -67,8 +65,10 @@ const ShoppingOrders = () => {
                     <TableCell>
                       <Badge
                         className={`py-1 px-2 ${
-                          item.orderStatus === "confirmed"
+                          item?.orderStatus === "confirmed"
                             ? "bg-green-400"
+                            : item?.orderStatus === "rejected"
+                            ? "bg-red-600"
                             : "bg-black"
                         }`}
                       >
@@ -92,7 +92,7 @@ const ShoppingOrders = () => {
                             View Details
                           </Button>
                         </DialogTitle>
-                        <ShoppingOrderDetailsView orderDetails={orderDetails}/>
+                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>
                   </TableRow>

@@ -39,9 +39,10 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
             <p className="font-medium">Order Status</p>
             <Label>
               <Badge
-                className={`py-1 px-2 ${
+                 className={`py-1 px-2 ${
                   orderDetails?.orderStatus === "confirmed"
-                    ? "bg-green-400"
+                    ? "bg-green-400" :
+                    orderDetails?.orderStatus === "rejected" ? "bg-red-600" 
                     : "bg-black"
                 }`}
               >

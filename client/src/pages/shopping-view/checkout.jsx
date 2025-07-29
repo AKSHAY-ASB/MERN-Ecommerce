@@ -15,8 +15,9 @@ const ShoppingCheckout = () => {
   const { approvalURL } = useSelector((state) => state.shopOrder);
 
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
+
   const [isPaymentStart, setIsPaymentStart] = useState(false);
-  
+
   const cartTotalAmount =
     cartItems && cartItems.items?.length > 0
       ? cartItems.items.reduce(
@@ -36,7 +37,7 @@ const ShoppingCheckout = () => {
       return;
     }
 
-    if (currentSelectedAddress !== '') {
+    if (currentSelectedAddress !== "") {
       toast("Please select one address to proceed.");
     }
 
@@ -94,7 +95,10 @@ const ShoppingCheckout = () => {
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 p-5">
-        <Address setCurrentSelectedAddress={setCurrentSelectedAddress}/>
+        <Address
+          selectedId={currentSelectedAddress}
+          setCurrentSelectedAddress={setCurrentSelectedAddress}
+        />
         <div className="flex flex-col gap-4">
           {cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((items) => (
@@ -109,7 +113,7 @@ const ShoppingCheckout = () => {
           </div>
           <div className="mt-4">
             <Button onClick={handleInitiatePaypalPayment} className="w-full">
-              Checkout with Paypal
+              {isPaymentStart ? "Processing paypal payment..." :"Checkout with Paypal"}
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Products");
 
@@ -70,7 +71,7 @@ const fetchCartItems = async (req, res) => {
     if (!cart) {
       return res.status(400).json({
         success: false,
-        message: "Cart not found.",
+        message: "Cart not found. sfddsfdsf",
       });
     }
 
@@ -176,8 +177,6 @@ const updateCartItemQty = async (req, res) => {
 const deleteCartItems = async (req, res) => {
   try {
     const { userId, productId } = req.params;
-
-    console.log(userId, productId, "deleteCartItems");
 
     if (!userId || !productId) {
       return res.status(400).json({

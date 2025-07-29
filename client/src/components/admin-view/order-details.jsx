@@ -5,7 +5,8 @@ import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
 import { useDispatch, useSelector } from "react-redux";
 import { Badge } from "../ui/badge";
-import { updateOrderStatusAdmin } from "@/redux/store/admin/order-slice";
+import { getAllOrderByAdmin, getOrderDetailsForAdmin, updateOrderStatusAdmin } from "@/redux/store/admin/order-slice";
+import { toast } from "sonner";
 
 const AdminOrderDetailsView = ({ orderDetails }) => {
   const dispatch = useDispatch();
@@ -22,7 +23,14 @@ const AdminOrderDetailsView = ({ orderDetails }) => {
         id: orderDetails?._id,
         orderStatus: status,
       })
-    ).then(data => console.log(data, "<><><><>"));
+    ).then((data) => {
+      if(data?.payload?.success){
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrderByAdmin());
+        setFormData(initialFormData);
+        toast.success(data?.payload?.message)
+      }
+    })
   };
 
   return (
@@ -55,7 +63,8 @@ const AdminOrderDetailsView = ({ orderDetails }) => {
               <Badge
                 className={`py-1 px-2 ${
                   orderDetails?.orderStatus === "confirmed"
-                    ? "bg-green-400"
+                    ? "bg-green-400" :
+                    orderDetails?.orderStatus === "rejected" ? "bg-red-600" 
                     : "bg-black"
                 }`}
               >

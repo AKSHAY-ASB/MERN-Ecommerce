@@ -12,28 +12,29 @@ import { Button } from "../ui/button";
 import { Dialog, DialogTitle } from "../ui/dialog";
 import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrderByAdmin, getOrderDetailsForAdmin, resetAdminOrderDetails } from "@/redux/store/admin/order-slice";
+import {
+  getAllOrderByAdmin,
+  getOrderDetailsForAdmin,
+  resetAdminOrderDetails,
+} from "@/redux/store/admin/order-slice";
 import { Badge } from "../ui/badge";
 
 const AdminOrdersView = () => {
-
-  const dispatch= useDispatch();
+  const dispatch = useDispatch();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const {orderList,orderDetails} = useSelector(state=>state.adminOrder);
+  const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
 
+  useEffect(() => {
+    dispatch(getAllOrderByAdmin());
+  }, [dispatch]);
 
-  useEffect(()=>{
-      dispatch(getAllOrderByAdmin())
-  },[dispatch]);
+  const handleGetOrderDetails = (getID) => {
+    dispatch(getOrderDetailsForAdmin(getID));
+  };
 
-    const handleGetOrderDetails = (getID) => {
-      dispatch(getOrderDetailsForAdmin(getID));
-    };
-
-      useEffect(() => {
-          if(orderDetails !== null) setOpenDetailsDialog(true);
-      }, [orderDetails]);
-  
+  useEffect(() => {
+    if (orderDetails !== null) setOpenDetailsDialog(true);
+  }, [orderDetails]);
 
   return (
     <Card>
@@ -54,7 +55,7 @@ const AdminOrdersView = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-                {orderList && orderList.length > 0
+            {orderList && orderList.length > 0
               ? orderList.map((item) => (
                   <TableRow key={item?._id}>
                     <TableCell>{item?._id}</TableCell>
@@ -62,8 +63,10 @@ const AdminOrdersView = () => {
                     <TableCell>
                       <Badge
                         className={`py-1 px-2 ${
-                          item.orderStatus === "confirmed"
+                          item?.orderStatus === "confirmed"
                             ? "bg-green-400"
+                            : item?.orderStatus === "rejected"
+                            ? "bg-red-600"
                             : "bg-black"
                         }`}
                       >
@@ -87,7 +90,7 @@ const AdminOrdersView = () => {
                             View Details
                           </Button>
                         </DialogTitle>
-                        <AdminOrderDetailsView orderDetails={orderDetails}/>
+                        <AdminOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>
                   </TableRow>

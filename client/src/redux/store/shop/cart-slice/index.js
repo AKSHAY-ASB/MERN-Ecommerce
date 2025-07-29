@@ -103,12 +103,9 @@ const shoppingCartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteCartItems.fulfilled, (state, action) => {
-        console.log(action.payload,"action.payload");
-        
         state.isLoading = false;
         state.cartItems = action.payload.data;
       }).addCase(deleteCartItems.rejected,(state)=>{
-                console.log("rejected");
         state.isLoading = false;
         state.cartItems = [];
       })

@@ -66,16 +66,15 @@ const adminOrderSlice = createSlice({
         (state.isLoading = false), (state.orderDetails = null);
       })
 
-      //   .addCase(updateOrderStatusAdmin.pending, (state) => {
-      //   state.isLoading = true;
-      // })
-      // .addCase(updateOrderStatusAdmin.fulfilled, (state, action) => {
-      //   console.log(action,"action");
-      //   (state.isLoading = false), (state.orderDetails = action.payload.data);
-      // })
-      // .addCase(updateOrderStatusAdmin.rejected, (state) => {
-      //   (state.isLoading = false), (state.orderDetails = null);
-      // });
+        .addCase(updateOrderStatusAdmin.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateOrderStatusAdmin.fulfilled, (state, action) => {
+        (state.isLoading = false), (state.orderDetails = action.payload.data);
+      })
+      .addCase(updateOrderStatusAdmin.rejected, (state) => {
+        (state.isLoading = false), (state.orderDetails = null);
+      });
   },
 });
 
