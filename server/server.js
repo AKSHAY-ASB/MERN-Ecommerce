@@ -25,49 +25,20 @@ const app = express();
 
 const PORT = process.env.PORT || 5000 ;
 
-// app.use(
-//     cors({
-//         origin:process.env.CLIENT_BASE_URL,
-//         methods:["GET", "POST", "DELETE", "PUT"],
-//         allowedHeaders:[
-//             "Content-Type",
-//             "Authorization",
-//             "Cache-Control",
-//             "Expires",
-//             "Pragma"
-//         ],
-//         credentials:true
-//     })
-// );
-
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mern-ecommerce-1-x63d.onrender.com"
-];
-
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      console.log("Request origin:", origin);
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed from origin: " + origin));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Cache-Control",
-      "Expires",
-      "Pragma"
-    ]
-  })
+    cors({
+        origin:process.env.CLIENT_BASE_URL,
+        methods:["GET", "POST", "DELETE", "PUT"],
+        allowedHeaders:[
+            "Content-Type",
+            "Authorization",
+            "Cache-Control",
+            "Expires",
+            "Pragma"
+        ],
+        credentials:true
+    })
 );
-
 
 app.use(cookieParser());
 app.use(express.json());
