@@ -45,7 +45,7 @@ const ProductImageUpload = ({
     const data = new FormData();
     data.append("my_file", imageFile);
     const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+      `${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,
       data
     );
 
@@ -58,7 +58,7 @@ const ProductImageUpload = ({
   useEffect(() => {
     if (imageFile !== null) uploadImageToCloudinary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageFile]);
+  }, [imageFile,uploadedImageUrl]);
 
   return (
     <div className={`w-full  ${isCustomStyling ? "" : "max-w-md mx-auto"}`}>
