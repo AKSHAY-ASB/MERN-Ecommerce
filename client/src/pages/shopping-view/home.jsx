@@ -202,7 +202,7 @@ const ShoppingHome = () => {
               ? productList.map((item) => (
                   <ShoppingProductTile
                     handleGetProductDetails={handleGetProductDetails}
-                    key={item.id}
+                    key={item._id}
                     product={item}
                     handleAddToCart={handleAddToCart}
                   />
