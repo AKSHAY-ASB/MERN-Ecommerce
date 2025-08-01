@@ -75,6 +75,7 @@ const loginUser = async (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "None",
+        domain: ".onrender.com",
       })
       .json({
         success: true,
