@@ -75,7 +75,6 @@ const loginUser = async (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "None",
-        domain: ".onrender.com",
       })
       .json({
         success: true,
@@ -87,6 +86,7 @@ const loginUser = async (req, res) => {
           userName: checkUser.userName,
         },
       });
+      console.log("Sending cookie for user:", token, checkUser.email);
   } catch (error) {
     console.log(error);
     res.status(500).json({
