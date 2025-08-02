@@ -70,23 +70,36 @@ const loginUser = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-      })
-      .json({
-        success: true,
-        message: "Logged In Successfully.",
-        user: {
+    // res
+    //   .cookie("token", token, {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "None",
+    //   })
+    //   .json({
+    //     success: true,
+    //     message: "Logged In Successfully.",
+    //     user: {
+    //       email: checkUser.email,
+    //       role: checkUser.role,
+    //       id: checkUser._id,
+    //       userName: checkUser.userName,
+    //     },
+    //   });
+
+
+    res.status(200).json({
+      success: true,
+      message: "Logged In Successfully.",
+      token,
+       user: {
           email: checkUser.email,
           role: checkUser.role,
           id: checkUser._id,
           userName: checkUser.userName,
         },
-      });
-      console.log("Sending cookie for user:", token, checkUser.email);
+    });
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -106,8 +119,30 @@ const logoutUser = (req, res) => {
 };
 //auth middleware
 
+// const authMiddleware = async (req, res, next) => {
+//   const token = req.cookies.token;
+//   if (!token)
+//     return res.status(401).json({
+//       success: false,
+//       message: "Unauthorised User !",
+//     });
+
+//   try {
+//     const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
+//     req.user = decoded;
+//     next();
+//   } catch (error) {
+//     res.status(401).json({
+//       success: false,
+//       message: "Unauthorised User !",
+//     });
+//   }
+// };
+
+
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
   if (!token)
     return res.status(401).json({
       success: false,

@@ -2,13 +2,18 @@ import React from "react";
 import { Button } from "../ui/button";
 import { LogOut, Menu } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "@/redux/store/auth-slice";
+import {  resetTokenAndCredentials } from "@/redux/store/auth-slice";
+import { useNavigate } from "react-router-dom";
 
 const AdminHeader = ({ setOpen }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    // dispatch(logoutUser());
+       dispatch(resetTokenAndCredentials());
+        sessionStorage.clear();
+        navigate("/auth/login");
   };
 
   return (

@@ -19,15 +19,18 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { logoutUser } from "@/redux/store/auth-slice";
+import {  resetTokenAndCredentials } from "@/redux/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/redux/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
-function MenuItems() {
+function MenuItems({isOpenSidebar,setIsOpenSidebar}) {
+
+  console.log(isOpenSidebar,"isOpenSidebar")
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [ setSearchParams] = useSearchParams();
 
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
@@ -47,6 +50,8 @@ function MenuItems() {
           new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
         )
       : navigate(getCurrentMenuItem.path);
+
+      setIsOpenSidebar(false)
   };
 
   return (
@@ -74,7 +79,10 @@ function HeaderRightContent() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    // dispatch(logoutUser());
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
+    navigate("/auth/login");
   };
 
   useEffect(() => {
@@ -132,6 +140,7 @@ function HeaderRightContent() {
 }
 
 const ShoppingHeader = () => {
+  const [isOpenSidebar,setIsOpenSidebar] = useState(false);
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -139,15 +148,15 @@ const ShoppingHeader = () => {
           <House className="h-6 w-6" />
           <span className="font-bold">E-commerce</span>
         </Link>
-        <Sheet>
+        <Sheet open={isOpenSidebar} onOpenChange={setIsOpenSidebar}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle header menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-full max-w-xs">
-            <MenuItems />
+          <SheetContent side="left" className="w-full max-w-xs sm:p-0 p-10">
+            <MenuItems setIsOpenSidebar={setIsOpenSidebar} isOpenSidebar={isOpenSidebar}/>
             <HeaderRightContent />
           </SheetContent>
         </Sheet>
