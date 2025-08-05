@@ -41,7 +41,7 @@ const ShoppingOrders = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-4xl p-2">Order History</CardTitle>
+        <CardTitle className="text-4xl p-2 mt-2">Order History</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>

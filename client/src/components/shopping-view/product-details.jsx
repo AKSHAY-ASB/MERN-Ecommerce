@@ -25,9 +25,11 @@ const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
     if (productDetails !== "") dispatch(getReviews(productDetails?._id));
   }, [dispatch, productDetails]);
 
-     const averageReviews = reviews && reviews.length > 0 ? 
-      reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
-      reviews.length : 0;
+  const averageReviews =
+    reviews && reviews.length > 0
+      ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
+        reviews.length
+      : 0;
 
   const handleRatingChange = (getRating) => {
     setRating(getRating);
@@ -45,7 +47,7 @@ const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
     ).then((data) => {
       if (data?.payload?.success) {
         setRating(0);
-        setReviewMsg('');
+        setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
         toast("Review added successfully.");
       }
@@ -93,14 +95,12 @@ const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid sm:grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:[max-w-[70vw]">
-        <div className="relative overflow-hidden rounded-lg">
+      <DialogContent className="w-[90vw] h-[90vh] sm:w-[800px] sm:h-[600px] overflow-y-auto p-6 grid sm:grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:[max-w-[70vw]">
+        <div className="w-full h-auto max-h-[300px] sm:max-h-full rounded-lg">
           <img
             src={productDetails?.image}
             alt={productDetails?.title}
-            width={600}
-            height={600}
-            className="aspect-square w-full object-cover"
+            className="w-full h-full object-cover"
           />
         </div>
         <div className="">
@@ -128,9 +128,11 @@ const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <div className="flex items-center gap-0.5">
-            <StartRatingComponents rating={averageReviews} />
+              <StartRatingComponents rating={averageReviews} />
             </div>
-            <span className="text-muted-foreground">{averageReviews.toFixed(2)}</span>
+            <span className="text-muted-foreground">
+              {averageReviews.toFixed(2)}
+            </span>
           </div>
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (
@@ -160,14 +162,16 @@ const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
                   reviews.map((item) => (
                     <div className="flex gap-4">
                       <Avatar className="w-10 h-10 border">
-                        <AvatarFallback>{item.userName[0].toUpperCase()}</AvatarFallback>
+                        <AvatarFallback>
+                          {item.userName[0].toUpperCase()}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="grid gap-1">
                         <div className="flex items-center gap-2">
                           <h3 className="font-bold">{item.userName}</h3>
                         </div>
                         <div className="flex items-center gap-0.5">
-                         <StartRatingComponents rating={item.reviewValue}/>
+                          <StartRatingComponents rating={item.reviewValue} />
                         </div>
                         <p className="text-muted-foreground">
                           {item.reviewMessage}

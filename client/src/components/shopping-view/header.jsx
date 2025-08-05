@@ -19,18 +19,17 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import {  resetTokenAndCredentials } from "@/redux/store/auth-slice";
+import { resetTokenAndCredentials } from "@/redux/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/redux/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
-function MenuItems({isOpenSidebar,setIsOpenSidebar}) {
-
-  console.log(isOpenSidebar,"isOpenSidebar")
+function MenuItems({ isOpenSidebar, setIsOpenSidebar }) {
+  console.log(isOpenSidebar, "isOpenSidebar");
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [ setSearchParams] = useSearchParams();
+  const [setSearchParams] = useSearchParams();
 
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
@@ -51,7 +50,7 @@ function MenuItems({isOpenSidebar,setIsOpenSidebar}) {
         )
       : navigate(getCurrentMenuItem.path);
 
-      setIsOpenSidebar(false)
+    setIsOpenSidebar(false);
   };
 
   return (
@@ -70,7 +69,7 @@ function MenuItems({isOpenSidebar,setIsOpenSidebar}) {
   );
 }
 
-function HeaderRightContent() {
+function HeaderRightContent({ setIsOpenSidebar }) {
   const { user } = useSelector((state) => state?.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
@@ -90,10 +89,12 @@ function HeaderRightContent() {
   }, [dispatch, user.id]);
 
   return (
-    <div className="flex lg:items-center lg:flex-row flex-col gap-4">
+    <div className="flex lg:items-center lg:flex-row flex-row gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
-          onClick={() => setOpenCartSheet(true)}
+          onClick={() => {
+            setOpenCartSheet(true);
+          }}
           variant="outline"
           size="icon"
           className="relative"
@@ -105,6 +106,7 @@ function HeaderRightContent() {
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
+          setIsOpenSidebar={setIsOpenSidebar}
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
             cartItems && cartItems.items && cartItems.items.length > 0
@@ -124,7 +126,12 @@ function HeaderRightContent() {
         <DropdownMenuContent side="right" className="w-56">
           <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+          <DropdownMenuItem
+            onClick={() => {
+              setIsOpenSidebar?.(false);
+              navigate("/shop/account");
+            }}
+          >
             <UserCog className="mr-2 h-4 w-4" />
             Account
           </DropdownMenuItem>
@@ -140,7 +147,7 @@ function HeaderRightContent() {
 }
 
 const ShoppingHeader = () => {
-  const [isOpenSidebar,setIsOpenSidebar] = useState(false);
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -156,8 +163,11 @@ const ShoppingHeader = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-full max-w-xs sm:p-0 p-10">
-            <MenuItems setIsOpenSidebar={setIsOpenSidebar} isOpenSidebar={isOpenSidebar}/>
-            <HeaderRightContent />
+            <MenuItems
+              setIsOpenSidebar={setIsOpenSidebar}
+              isOpenSidebar={isOpenSidebar}
+            />
+            <HeaderRightContent setIsOpenSidebar={setIsOpenSidebar} />
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">
